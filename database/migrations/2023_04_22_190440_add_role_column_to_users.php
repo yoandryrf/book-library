@@ -12,9 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        $enumsArr = UserRoleEnum::cases();
+        $values = array_column($enumsArr, 'value');
+
         //TODO: Change this by a new table named 'roles'
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', [UserRoleEnum::WORKER, UserRoleEnum::CLIENT])->default(UserRoleEnum::CLIENT);
+        Schema::table('users', function (Blueprint $table) use ($values) {
+            $table->enum('role', $values)->default(UserRoleEnum::CLIENT->value);
         });
     }
 
