@@ -30,14 +30,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/clients', [UserController::class, 'index'])->name('users.clients')->middleware('worker');
-
-    Route::resource('books', BookController::class);
-    Route::put('books/{book}/restore', [BookController::class, 'restore'])->name('books.restore')->middleware('worker');
+    Route::middleware(['worker'])->group(function () {
+        Route::get('/clients', [UserController::class, 'index'])->name('users.clients');
+        Route::resource('books', BookController::class);
+        Route::put('books/{book}/restore', [BookController::class, 'restore'])->name('books.restore');
+    });
 
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::put('/reservations/{book}/reserve', [ReservationController::class, 'reserve'])->name('reservations.reserve')->middleware('client');
     Route::put('/reservations/{book}/return', [ReservationController::class, 'return'])->name('reservations.return')->middleware('client');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

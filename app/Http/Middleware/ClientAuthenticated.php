@@ -20,7 +20,7 @@ class ClientAuthenticated
         if (Auth::check()) {
             $user = Auth::user();
 
-            // if user is not admin take him to his dashboard
+            // if user is worker take him to his dashboard
             if ($user->hasRole(UserRoleEnum::WORKER)) {
                 return redirect(route('dashboard'));
             }

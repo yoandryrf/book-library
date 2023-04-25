@@ -10,6 +10,10 @@ use App\Enums\UserRoleEnum;
 
 class WorkerAuthenticated
 {
+    protected $except = [
+        'books.index'
+    ];
+
     /**
      * Handle an incoming request.
      *
@@ -20,9 +24,11 @@ class WorkerAuthenticated
         if (Auth::check()) {
             $user = Auth::user();
 
-            // if user is not admin take him to his dashboard
-            if ($user->hasRole(UserRoleEnum::CLIENT)) {
-                return redirect(route('dashboard'));
+            if (!in_array($request->route()->getName(), $this->except)) {
+                // if user is client take him to his dashboard
+                if ($user->hasRole(UserRoleEnum::CLIENT)) {
+                    return redirect(route('dashboard'));
+                }
             }
 
             return $next($request);
